@@ -1,20 +1,33 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import QRCodeModal from "algorand-walletconnect-qrcode-modal";
+// import "./App.css";
+// import "./index.css"
+import Home from "./pages/home";
+import Login from "./pages/login";
+import { useAppSelector } from "./store/hooks";
 
 function App() {
+    const { address, chain } = useAppSelector((state) => state.walletConnect);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (address && chain) {
+            navigate("/");
+            QRCodeModal.close();
+        } else {
+            navigate("/login");
+        }
+    }, [address, chain, navigate]);
+
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <main className=" bg-white">
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Home />} />
+            </Routes>
+        </main>
     );
 }
 
