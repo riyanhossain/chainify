@@ -1,0 +1,53 @@
+.profile {
+    width: 41.67px;
+    height: 41.67px;
+    cursor: pointer;
+}
+
+.wallet_address_div {
+    position: relative;
+    border: 1px solid #242323;
+    border-radius: 8px;
+}
+
+.wallet_address_text {
+    /* Body 1/Default */
+
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    /* Text/Text 1 */
+
+    color: #242323;
+
+    padding: 0.5rem;
+    padding-inline: 1.5rem;
+}
+
+.wallet_address_label {
+    position: absolute;
+    top: -8px;
+    left: 1rem;
+    background: #F2F0FF;
+    padding: 0 0.5rem;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    /* identical to box height, or 150% */
+
+    /* Text/Text 2 */
+
+    color: #b5b3bc;
+}
+
+.close_div {
+    display: flex;
+    justify-content: flex-end;
+    
+}
