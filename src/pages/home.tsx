@@ -6,6 +6,8 @@ import { useAppDispatch } from "../store/hooks";
 import styles from "../styles/home.module.css";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import { Box, Typography } from "@mui/material";
+import Uploadfile from "../components/upload/uploadfile";
+import UploadPostImage from "../components/upload/uploadfile";
 
 export default function Home() {
     const connector = useContext(ConnectContext);
@@ -50,8 +52,31 @@ export default function Home() {
                                 borderRadius: "20px",
                                 border: "1px solid #000000",
                                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                p: "1.5rem",
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "space-between",
                             }}
-                        ></Box>
+                        >
+                            <p
+                                style={{
+                                    fontFamily: "Montserrat",
+                                    fontStyle: "normal",
+                                    fontWeight: "700",
+                                    fontSize: "30px",
+                                    letterSpacing: "0.01em",
+
+                                    /* Text/Text 1 */
+
+                                    color: "#F2F0FF",
+
+                                    textShadow: "2px 4px 12px rgba(0, 0, 0, 0.64)",
+                                }}
+                            >
+                                Upload
+                            </p>
+                            <UploadPostImage />
+                        </Box>
                     </Grid>
                     <Grid xs={2.5}>
                         <Box
