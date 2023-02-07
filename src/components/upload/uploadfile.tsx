@@ -1,3 +1,4 @@
+import { ImageList } from "@mui/material";
 import { Box } from "@mui/system";
 import { set } from "immer/dist/internal";
 import React from "react";
@@ -122,7 +123,7 @@ const UploadPostImage: React.FC = () => {
                 )}
             </ImageUploading>
 
-            <FileUploadModal open={open} setOpen={setOpen} />
+            <FileUploadModal open={open} setOpen={setOpen} image={imageList[0] || null} setImage={setImageList} />
         </div>
     );
 };
