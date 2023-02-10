@@ -1,30 +1,46 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import QRCodeModal from "algorand-walletconnect-qrcode-modal";
 import "./App.css";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import { useAppSelector } from "./store/hooks";
+import File from "./pages/file";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     const { address, chain } = useAppSelector((state) => state.walletConnect);
-
     const navigate = useNavigate();
+    const { pathname } = useLocation();
 
     useEffect(() => {
-        if (address && chain) {
+        if (address && chain && pathname === "/login") {
             navigate("/");
             QRCodeModal.close();
-        } else {
-            navigate("/login");
         }
-    }, [address, chain, navigate]);
+    }, [address, chain, navigate, pathname]);
 
     return (
-        <main className=" bg-white">
+        <main className="">
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
+
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/:id"
+                    element={
+                        <ProtectedRoute>
+                            <File />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </main>
     );

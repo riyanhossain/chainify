@@ -34,14 +34,13 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Check if connection is already established
-        if (connector.connected) {
-            console.log("connected");
-            QRCodeModal.close();
-            navigate("/home");
-        }
-    }, [connector, navigate]);
+    // useEffect(() => {
+    //     // Check if connection is already established
+    //     if (connector.connected) {
+    //         QRCodeModal.close();
+    //         navigate("/");
+    //     }
+    // }, [connector, navigate]);
 
     // this is what determines whether user wants to make a normal or NFT transaction
 

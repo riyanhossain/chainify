@@ -1,0 +1,26 @@
+[
+    {
+        "assetID": 1,
+        "file": "https://res.cloudinary.com/dqdll5wus/image/upload/v1650916197/sample.jpg",
+        "mimetype": "image/jpg",
+        "file_name": "sample.jpg",
+        "creator": "TBD5EYFYYPYHIKYIJGTRKFGBW4TK4",
+        "created": "2021-04-30 12:00:00",
+        "size_bytes": 123456,
+        "owner": "TBD5EYFYYPYHIKYIJGTRKFGBW4TK4",
+        "cost_algo": 4.563000,
+        "cost_usdt": 0.2400
+    },
+    {
+        "assetID": 2,
+        "file": "https://res.cloudinary.com/dqdll5wus/image/upload/v1650916219/cld-sample.jpg",
+        "mimetype": "image/jpg",
+        "file_name": "sample1.jpg",
+        "creator": "TBD5EYFYYPYHIKYIJGTRKFGBW4TK4",
+        "created": "2021-04-30 12:00:00",
+        "size_bytes": 13456,
+        "owner": "TBD5EYFYYPYHIKYIJGTRKFGBW4TK4",
+        "cost_algo": 4.563000,
+        "cost_usdt": 0.2400
+    }
+]
