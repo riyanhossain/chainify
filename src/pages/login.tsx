@@ -16,21 +16,22 @@ export default function Login() {
     const { address, chain } = useAppSelector((state) => state.walletConnect);
     const assets = useAppSelector(selectAssets);
     // get algo balance
-    const nativeCurrency = assets.find((asset : any) => asset.id === 0)!;
+    const nativeCurrency = assets.find((asset: any) => asset.id === 0)!;
     const dispatch = useAppDispatch();
     const connector = useContext(ConnectContext);
 
     const connect = async () => {
-        if (connector.connected) return null;
-        else {
+        if (connector.connected) {
+            await connector.killSession();
             QRCodeModal.open(connector.uri, null);
             await connector.createSession();
-            
+        } else {
+            QRCodeModal.open(connector.uri, null);
+            await connector.createSession();
         }
     };
 
     // close the qr code modal
-
 
     const navigate = useNavigate();
 
@@ -70,7 +71,7 @@ export default function Login() {
         });
 
         connector.on("disconnect", (error, payload) => {
-            console.log("disconnect")
+            console.log("disconnect");
             // function to run when wallet is disconnected
             if (error) {
                 throw error;

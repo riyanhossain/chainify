@@ -238,7 +238,7 @@ export default function NftTable() {
                                 }}
                                 
                                 onClick={() => {
-                                    navigate(`/${row.id}`);
+                                    navigate(`/file/${row.id}`);
                                 }}
                             >
                                 <TableCell

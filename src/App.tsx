@@ -14,10 +14,10 @@ function App() {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        if (address && chain && pathname === "/login") {
-            navigate("/");
+        if (address && chain) {
             QRCodeModal.close();
-        }
+            if (pathname === "/login") navigate("/");
+        } else return;
     }, [address, chain, navigate, pathname]);
 
     return (
@@ -34,11 +34,11 @@ function App() {
                     }
                 />
                 <Route
-                    path="/:id"
+                    path="/file/:id"
                     element={
-                        <ProtectedRoute>
-                            <File />
-                        </ProtectedRoute>
+                        // <ProtectedRoute>
+                        <File />
+                        // </ProtectedRoute>
                     }
                 />
             </Routes>
