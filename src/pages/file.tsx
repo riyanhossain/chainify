@@ -1,9 +1,10 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Hidden } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import React, { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FileNavbar from "../components/navbar/filenavbar";
 import GetImageByType from "../utils/GetImageByType";
+import algo from "../assets/algo.svg";
 
 export default function File() {
     const { id } = useParams<string>();
@@ -33,24 +34,27 @@ export default function File() {
 
     const navigate = useNavigate();
 
+    const [hideDetails, setHideDetails] = React.useState<boolean>(false);
+
     return (
         <Box
             sx={{
-                minHeight: "100vh",
+                maxHeight: "100vh",
+                overflowY: hideDetails ? "scroll" : "hidden",
             }}
         >
             <FileNavbar />
             <Box
                 sx={{
                     px: "1rem",
-                    height: "calc(100vh - 105px)",
+                    maxHeight: "calc(100vh - 105px)",
                 }}
             >
                 <Grid container spacing={2} sx={{}}>
-                    <Grid xs={9.5}>
+                    <Grid xs={hideDetails ? 11.3 : 9.5}>
                         <Box
                             sx={{
-                                height: "90px",
+                                height: "82px",
                                 backgroundColor: "#161616",
                                 borderRadius: "20px",
                                 border: "1px solid #000000",
@@ -227,67 +231,58 @@ export default function File() {
 
                         <Box
                             sx={{
-                                minHeight: "calc(100vh - 90px - 202px - 2rem)",
+                                height: hideDetails ? "100%" : "calc(100vh - 202px)",
                                 backgroundColor: "#161616",
-                                borderRadius: "20px",
                                 border: "1px solid #000000",
                                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                                p: "1.5rem",
                                 mt: 2,
                             }}
                         >
-                            <Box
-                                sx={{
-                                    mt: 2,
+                            <img
+                                src={data.file}
+                                alt="img"
+                                style={{
+                                    height: "100%",
+                                    width: "100%",
+                                    objectFit: "contain",
                                 }}
-                            ></Box>
+                            />
                         </Box>
                     </Grid>
-                    <Grid xs={2.5}>
-                        <Box
-                            sx={{
-                                height: "calc(100vh - 105px)",
-                                backgroundColor: "#161616",
-                                borderRadius: "20px",
-                                border: "1px solid #000000",
-                                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                                p: "1rem",
-                            }}
-                        >
+                    <Grid xs={hideDetails ? 0.7 : 2.5}>
+                        {hideDetails ? (
                             <Box
                                 sx={{
                                     display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
+                                    justifyContent: "end",
                                 }}
                             >
-                                <p
-                                    style={{
-                                        fontFamily: "Montserrat",
-                                        fontStyle: "normal",
-                                        fontWeight: "700",
-                                        fontSize: "30px",
-                                        /* identical to box height, or 100% */
-
-                                        letterSpacing: "0.01em",
-
-                                        /* Text/Text 1 */
-
-                                        color: "#F2F0FF",
-
-                                        textShadow: "2px 4px 12px rgba(0, 0, 0, 0.64)",
+                                <Button
+                                    sx={{
+                                        background: "#161616",
+                                        borderRadius: "20px",
+                                        width: "75px",
+                                        height: "82px",
                                     }}
+                                    onClick={() => setHideDetails(!hideDetails)}
                                 >
-                                    Info
-                                </p>
+                                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M23.4067 16.7975C23.1159 16.6531 22.7797 16.63 22.4719 16.7334C22.1641 16.8368 21.9099 17.0581 21.7652 17.3487C20.9899 18.9145 19.81 20.2446 18.3478 21.2011C16.8856 22.1576 15.1943 22.7058 13.449 22.7889C11.7038 22.872 9.96801 22.487 8.42156 21.6737C6.87511 20.8605 5.57421 19.6485 4.6536 18.1635C3.733 16.6784 3.22617 14.9742 3.18561 13.2275C3.14506 11.4807 3.57225 9.75482 4.42294 8.22864C5.27363 6.70246 6.51689 5.43147 8.02393 4.54732C9.53097 3.66316 11.247 3.198 12.9942 3.20001C14.8209 3.1921 16.6127 3.69936 18.1641 4.66358C19.7155 5.62779 20.9636 7.00989 21.7652 8.65125C21.9114 8.94365 22.1678 9.166 22.4779 9.26938C22.7881 9.37276 23.1266 9.3487 23.419 9.2025C23.7114 9.0563 23.9337 8.79993 24.0371 8.4898C24.1405 8.17966 24.1164 7.84116 23.9702 7.54875C22.7411 5.07517 20.712 3.08959 18.2124 1.91429C15.7128 0.738984 12.8893 0.442953 10.2003 1.07424C7.51123 1.70553 5.11446 3.22707 3.39898 5.39192C1.6835 7.55678 0.75 10.2379 0.75 13C0.75 15.7621 1.6835 18.4432 3.39898 20.6081C5.11446 22.7729 7.51123 24.2945 10.2003 24.9258C12.8893 25.557 15.7128 25.261 18.2124 24.0857C20.712 22.9104 22.7411 20.9248 23.9702 18.4512C24.0432 18.3059 24.0866 18.1475 24.0977 17.9853C24.1088 17.823 24.0876 17.6602 24.0351 17.5063C23.9827 17.3523 23.9001 17.2104 23.7922 17.0887C23.6843 16.967 23.5533 16.868 23.4067 16.7975ZM24.0192 11.775H12.2715L15.089 8.96975C15.2032 8.85554 15.2938 8.71994 15.3556 8.57071C15.4174 8.42148 15.4492 8.26153 15.4492 8.1C15.4492 7.93848 15.4174 7.77853 15.3556 7.6293C15.2938 7.48007 15.2032 7.34447 15.089 7.23026C14.9748 7.11604 14.8392 7.02544 14.6899 6.96362C14.5407 6.90181 14.3808 6.86999 14.2192 6.86999C14.0577 6.86999 13.8978 6.90181 13.7485 6.96362C13.5993 7.02544 13.4637 7.11604 13.3495 7.23026L8.44949 12.1303C8.33797 12.2468 8.25055 12.3841 8.19224 12.5345C8.06972 12.8327 8.06972 13.1673 8.19224 13.4655C8.25055 13.6159 8.33797 13.7532 8.44949 13.8697L13.3495 18.7697C13.4634 18.8846 13.5989 18.9757 13.7481 19.0379C13.8974 19.1001 14.0575 19.1321 14.2192 19.1321C14.381 19.1321 14.5411 19.1001 14.6903 19.0379C14.8396 18.9757 14.9751 18.8846 15.089 18.7697C15.2038 18.6559 15.2949 18.5204 15.3571 18.3711C15.4193 18.2218 15.4513 18.0617 15.4513 17.9C15.4513 17.7383 15.4193 17.5782 15.3571 17.4289C15.2949 17.2796 15.2038 17.1441 15.089 17.0302L12.2715 14.225H24.0192C24.3441 14.225 24.6557 14.0959 24.8854 13.8662C25.1152 13.6365 25.2442 13.3249 25.2442 13C25.2442 12.6751 25.1152 12.3635 24.8854 12.1338C24.6557 11.9041 24.3441 11.775 24.0192 11.775Z"
+                                            fill="#F2F0FF"
+                                        />
+                                    </svg>
+                                </Button>
                             </Box>
-
+                        ) : (
                             <Box
                                 sx={{
-                                    mt: "1.5rem",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "1rem",
+                                    height: "calc(100vh - 95px)",
+                                    backgroundColor: "#161616",
+                                    borderRadius: "20px",
+                                    border: "1px solid #000000",
+                                    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                    p: "1rem",
                                 }}
                             >
                                 <Box
@@ -299,310 +294,515 @@ export default function File() {
                                 >
                                     <p
                                         style={{
-                                            fontFamily: "Lato",
+                                            fontFamily: "Montserrat",
                                             fontStyle: "normal",
                                             fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                            fontSize: "30px",
+                                            /* identical to box height, or 100% */
 
-                                            /* Text/Text 2 */
+                                            letterSpacing: "0.01em",
 
-                                            color: "#B5B3BC",
+                                            /* Text/Text 1 */
+
+                                            color: "#F2F0FF",
+
+                                            textShadow: "2px 4px 12px rgba(0, 0, 0, 0.64)",
                                         }}
                                     >
-                                        Owner
+                                        Info
                                     </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "400",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
 
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
+                                    <Button
+                                        sx={{
+                                            cursor: "pointer",
                                         }}
+                                        onClick={() => setHideDetails(!hideDetails)}
                                     >
-                                        0000
-                                    </p>
+                                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M13.7227 14.2251L10.9052 17.0303C10.7904 17.1442 10.6993 17.2797 10.6371 17.4289C10.5749 17.5782 10.5428 17.7383 10.5428 17.9C10.5428 18.0618 10.5749 18.2219 10.6371 18.3711C10.6993 18.5204 10.7904 18.6559 10.9052 18.7698C11.0191 18.8846 11.1546 18.9757 11.3038 19.0379C11.4531 19.1001 11.6132 19.1321 11.7749 19.1321C11.9367 19.1321 12.0968 19.1001 12.246 19.0379C12.3953 18.9757 12.5308 18.8846 12.6447 18.7698L17.5447 13.8698C17.6562 13.7533 17.7436 13.6159 17.8019 13.4656C17.9244 13.1673 17.9244 12.8328 17.8019 12.5346C17.7436 12.3842 17.6562 12.2468 17.5447 12.1303L12.6447 7.23034C12.5305 7.11612 12.3949 7.02552 12.2456 6.96371C12.0964 6.90189 11.9365 6.87008 11.7749 6.87008C11.6134 6.87008 11.4535 6.90189 11.3042 6.96371C11.155 7.02552 11.0194 7.11612 10.9052 7.23034C10.791 7.34456 10.7004 7.48015 10.6386 7.62938C10.5768 7.77861 10.5449 7.93856 10.5449 8.10009C10.5449 8.26161 10.5768 8.42156 10.6386 8.57079C10.7004 8.72002 10.791 8.85561 10.9052 8.96983L13.7227 11.7751H1.97499C1.65011 11.7751 1.33852 11.9041 1.10879 12.1339C0.879061 12.3636 0.75 12.6752 0.75 13.0001C0.75 13.3249 0.879061 13.6365 1.10879 13.8663C1.33852 14.096 1.65011 14.2251 1.97499 14.2251H13.7227ZM12.9999 0.750122C10.7105 0.739901 8.46409 1.37145 6.51539 2.57315C4.5667 3.77484 2.99376 5.49858 1.97499 7.54884C1.82879 7.84124 1.80474 8.17974 1.90812 8.48988C2.0115 8.80001 2.23384 9.05638 2.52624 9.20258C2.81864 9.34878 3.15714 9.37284 3.46728 9.26946C3.77742 9.16608 4.03378 8.94373 4.17998 8.65133C4.95441 7.08741 6.13242 5.75866 7.59226 4.80239C9.05211 3.84612 10.7408 3.29703 12.4839 3.21186C14.227 3.12669 15.9612 3.50853 17.5073 4.31793C19.0534 5.12732 20.3554 6.33491 21.2786 7.81588C22.2018 9.29686 22.7128 10.9975 22.7587 12.7421C22.8047 14.4866 22.384 16.2118 21.54 17.7393C20.6961 19.2669 19.4595 20.5413 17.9581 21.431C16.4568 22.3207 14.7451 22.7933 12.9999 22.8C11.1733 22.8079 9.38149 22.3007 7.83009 21.3364C6.27868 20.3722 5.03056 18.9901 4.22898 17.3488C4.08278 17.0564 3.82642 16.834 3.51628 16.7307C3.20614 16.6273 2.86764 16.6513 2.57524 16.7975C2.28284 16.9437 2.0605 17.2001 1.95712 17.5102C1.85374 17.8204 1.87779 18.1589 2.02399 18.4513C2.9952 20.4058 4.47094 22.0653 6.29857 23.2582C8.1262 24.4511 10.2394 25.1341 12.4194 25.2365C14.5995 25.3389 16.7674 24.857 18.6988 23.8407C20.6302 22.8243 22.255 21.3104 23.4051 19.4556C24.5553 17.6007 25.189 15.4723 25.2407 13.2904C25.2924 11.1085 24.7603 8.95243 23.6993 7.04516C22.6384 5.13789 21.0872 3.5487 19.2061 2.44197C17.325 1.33523 15.1824 0.751147 12.9999 0.750122Z"
+                                                fill="#F2F0FF"
+                                            />
+                                        </svg>
+                                    </Button>
                                 </Box>
 
                                 <Box
                                     sx={{
+                                        mt: "1.5rem",
                                         display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
+                                        flexDirection: "column",
+                                        gap: "1rem",
                                     }}
                                 >
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Owner
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            0000
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            ID
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            0000
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Chain
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Algorand
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Cost
+                                        </p>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "0.3rem",
+                                            }}
+                                        >
+                                            <p
+                                                style={{
+                                                    fontFamily: "Lato",
+                                                    fontStyle: "normal",
+                                                    fontWeight: "700",
+                                                    fontSize: "18px",
+                                                    lineHeight: "22px",
+
+                                                    /* Text/Text 2 */
+
+                                                    color: "#B5B3BC",
+                                                }}
+                                            >
+                                                0.01
+                                            </p>
+                                            <img
+                                                src={algo}
+                                                alt="algo"
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                }}
+                                            />
+                                        </Box>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Asset creation
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Explorer link
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Header transaction
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Explorer link
+                                        </p>
+                                    </Box>
+
+                                    {/* divider line */}
+                                    <Box
+                                        sx={{
+                                            width: "100%",
+                                            height: "1.5px",
+                                            backgroundColor: "#B5B3BC",
+                                            margin: "1.5rem 0",
+                                        }}
+                                    ></Box>
+
                                     <p
                                         style={{
-                                            fontFamily: "Lato",
+                                            fontFamily: "Montserrat",
                                             fontStyle: "normal",
                                             fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                            fontSize: "30px",
+                                            /* identical to box height, or 100% */
 
-                                            /* Text/Text 2 */
+                                            letterSpacing: "0.01em",
 
-                                            color: "#B5B3BC",
+                                            /* Text/Text 1 */
+
+                                            color: "#F2F0FF",
+
+                                            textShadow: "2px 4px 12px rgba(0, 0, 0, 0.64)",
                                         }}
                                     >
-                                        ID
+                                        Property
                                     </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "400",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
 
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        0000
-                                    </p>
-                                </Box>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                                /* Text/Text 2 */
 
-                                            /* Text/Text 2 */
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Type
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                            color: "#B5B3BC",
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Image JPG
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        Chain
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                            /* Text/Text 2 */
+                                                /* Text/Text 2 */
 
-                                            color: "#B5B3BC",
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Size
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
+
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            2,8 MB
+                                        </p>
+                                    </Box>
+
+                                    {/* divider line */}
+                                    <Box
+                                        sx={{
+                                            width: "100%",
+                                            height: "1.5px",
+                                            backgroundColor: "#B5B3BC",
+                                            margin: "1.5rem 0",
                                         }}
-                                    >
-                                        Algorand
-                                    </p>
-                                </Box>
+                                    ></Box>
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
                                     <p
                                         style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
-
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        Cost
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
-
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        0.01
-                                    </p>
-                                </Box>
-
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
+                                            fontFamily: "Montserrat",
                                             fontStyle: "normal",
                                             fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                            fontSize: "30px",
+                                            /* identical to box height, or 100% */
 
-                                            /* Text/Text 2 */
+                                            letterSpacing: "0.01em",
 
-                                            color: "#B5B3BC",
+                                            /* Text/Text 1 */
+
+                                            color: "#F2F0FF",
+
+                                            textShadow: "2px 4px 12px rgba(0, 0, 0, 0.64)",
                                         }}
                                     >
-                                        Asset creation
+                                        Activities
                                     </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
 
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        Explorer link
-                                    </p>
-                                </Box>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                                /* Text/Text 2 */
 
-                                            /* Text/Text 2 */
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Renamed
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                            color: "#B5B3BC",
+                                                /* Text/Text 2 */
+
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            10.12.2022 - 19:03
+                                        </p>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        Header transaction
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "700",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                            /* Text/Text 2 */
+                                                /* Text/Text 2 */
 
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        Explorer link
-                                    </p>
-                                </Box>
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            Created
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: "Lato",
+                                                fontStyle: "normal",
+                                                fontWeight: "400",
+                                                fontSize: "18px",
+                                                lineHeight: "22px",
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "22px",
-                                            lineHeight: "26px",
+                                                /* Text/Text 2 */
 
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        Asset name - 2
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "400",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
-
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        24.58 AA
-                                    </p>
-                                </Box>
-
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "700",
-                                            fontSize: "22px",
-                                            lineHeight: "26px",
-
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        Asset name - 3
-                                    </p>
-                                    <p
-                                        style={{
-                                            fontFamily: "Lato",
-                                            fontStyle: "normal",
-                                            fontWeight: "400",
-                                            fontSize: "18px",
-                                            lineHeight: "22px",
-
-                                            /* Text/Text 2 */
-
-                                            color: "#B5B3BC",
-                                        }}
-                                    >
-                                        25 LBO
-                                    </p>
+                                                color: "#B5B3BC",
+                                            }}
+                                        >
+                                            06.12.2022 - 16:32
+                                        </p>
+                                    </Box>
                                 </Box>
                             </Box>
-                        </Box>
+                        )}
                     </Grid>
                 </Grid>
             </Box>
