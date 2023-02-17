@@ -10,15 +10,19 @@ import { Button, Divider, Menu } from "@mui/material";
 import GetImageByType from "../../utils/GetImageByType";
 import { getSizeByBytes } from "../../utils/GetSizeByBytes";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
+import { useGetAssetsFromBackendMutation, useGetAssetsQuery } from "../../helpers/api";
+import fileDownload from "js-file-download";
 
-function createData(type: string, name: string, size: number, date: string, protein: number, id: number) {
-    return { type, name, size, date, protein, id };
+function createData(type: string, name: string, size: number, date: string, protein: number, id: number, file: string) {
+    return { type, name, size, date, protein, id, file };
 }
 
 // const rows = [createData("image/png", "Frozen yoghurt", 64.2, "09.12.2022 - 15:31", 4.0)];
 
 export default function NftTable() {
-    const [tabelData, setTableData] = React.useState<any>([]);
+    const [tableData, setTableData] = React.useState<string[]>([]);
+    const { chain, address } = useAppSelector((state) => state.walletConnect);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,9 +32,34 @@ export default function NftTable() {
         setAnchorEl(null);
     };
 
+    const downloadFile = (file_name: string, view = false) => {
+        fetch(`${process.env.REACT_APP_BASE_API_URL}/nft/download-file/${file_name}/${address}/`, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                responseType: "blob",
+            },
+        })
+            .then((response) => response.blob())
+            .then((data) => {
+                if (view) {
+                    // if viewsing file
+                    const url = URL.createObjectURL(data);
+                    window.open(url, "_blank")?.focus();
+                } else {
+                    fileDownload(data, file_name);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+
     const [anchorElClipboard, setAnchorElClipboard] = React.useState<null | HTMLElement>(null);
     const openClipboard = Boolean(anchorElClipboard);
-    const handleClickClipboard = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClickClipboard = (event: React.MouseEvent<HTMLButtonElement>, file: string) => {
+        navigator.clipboard.writeText(file);
         setAnchorElClipboard(event.currentTarget);
         setTimeout(() => {
             handleCloseClipboard();
@@ -39,30 +68,36 @@ export default function NftTable() {
     const handleCloseClipboard = () => {
         setAnchorElClipboard(null);
     };
-    const fetchTableData = async () => {
-        const response = await fetch(
-            "data.json",
+    // const fetchTableData = async () => {
+    //     const response = await fetch(
+    //         "data.json",
 
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            }
-        );
-        const data = await response.json();
-        console.log(data);
-        setTableData(data);
-    };
+    //         {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Accept: "application/json",
+    //             },
+    //         }
+    //     );
+    //     const data = await response.json();
+    //     console.log(data);
+    //     setTableData(data);
+    // };
 
-    React.useEffect(() => {
-        fetchTableData();
-    }, []);
+    // React.useEffect(() => {
+    //     fetchTableData();
+    // }, []);
+
+    // const [getAssetsFromBackend, result] = useGetAssetsFromBackendMutation();
+
+    const { data } = useGetAssetsQuery(address);
+
+    console.log(data);
 
     const navigate = useNavigate();
 
-    const rows = tabelData.map((file: any) => {
-        return createData(file.mimetype, file.file_name, file.size_bytes, file.created, 1, file.assetID);
+    const rows = data?.map((file: any) => {
+        return createData(file.mimetype, file.file_name, file.size_bytes, file.created, 1, file.assetID, file.file);
     });
 
     return (
@@ -235,7 +270,7 @@ export default function NftTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map(
+                    {rows?.map(
                         (
                             row: {
                                 type: string;
@@ -243,6 +278,7 @@ export default function NftTable() {
                                 size: number;
                                 date: string;
                                 id: number;
+                                file: string;
                             },
                             index: number
                         ) => (
@@ -323,6 +359,7 @@ export default function NftTable() {
                                     }}
                                 >
                                     <>
+                                        {/* menu btn */}
                                         <Button
                                             sx={{
                                                 height: "50px",
@@ -418,6 +455,7 @@ export default function NftTable() {
                                                     color: "#242323",
                                                     textTransform: "capitalize",
                                                 }}
+                                                onClick={() => downloadFile(row.name)}
                                             >
                                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -472,7 +510,7 @@ export default function NftTable() {
                                         </Menu>
                                     </>
 
-                                    <Button>
+                                    <Button onClick={() => downloadFile(row.name)}>
                                         <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M19.6876 12.5417C19.4168 12.5417 19.1572 12.6492 18.9657 12.8407C18.7743 13.0321 18.6667 13.2918 18.6667 13.5625V17.6458C18.6667 17.9166 18.5592 18.1762 18.3678 18.3677C18.1763 18.5591 17.9167 18.6667 17.6459 18.6667H3.35425C3.08351 18.6667 2.82385 18.5591 2.63241 18.3677C2.44097 18.1762 2.33341 17.9166 2.33341 17.6458V13.5625C2.33341 13.2918 2.22586 13.0321 2.03442 12.8407C1.84298 12.6492 1.58332 12.5417 1.31258 12.5417C1.04184 12.5417 0.782187 12.6492 0.590743 12.8407C0.3993 13.0321 0.291748 13.2918 0.291748 13.5625V17.6458C0.291748 18.4581 0.614403 19.237 1.18873 19.8113C1.76306 20.3857 2.54202 20.7083 3.35425 20.7083H17.6459C18.4581 20.7083 19.2371 20.3857 19.8114 19.8113C20.3858 19.237 20.7084 18.4581 20.7084 17.6458V13.5625C20.7084 13.2918 20.6009 13.0321 20.4094 12.8407C20.218 12.6492 19.9583 12.5417 19.6876 12.5417ZM9.77529 14.2873C9.87238 14.3802 9.98686 14.4531 10.1122 14.5017C10.2344 14.5557 10.3665 14.5836 10.5001 14.5836C10.6337 14.5836 10.7658 14.5557 10.888 14.5017C11.0133 14.4531 11.1278 14.3802 11.2249 14.2873L15.3082 10.204C15.5004 10.0117 15.6084 9.75101 15.6084 9.47916C15.6084 9.20731 15.5004 8.9466 15.3082 8.75437C15.116 8.56215 14.8553 8.45415 14.5834 8.45415C14.3116 8.45415 14.0508 8.56215 13.8586 8.75437L11.5209 11.1023V1.3125C11.5209 1.04176 11.4134 0.782103 11.2219 0.590659C11.0305 0.399216 10.7708 0.291664 10.5001 0.291664C10.2293 0.291664 9.96969 0.399216 9.77824 0.590659C9.5868 0.782103 9.47925 1.04176 9.47925 1.3125V11.1023L7.14154 8.75437C7.04636 8.65919 6.93336 8.58369 6.809 8.53218C6.68464 8.48067 6.55135 8.45415 6.41675 8.45415C6.28214 8.45415 6.14885 8.48067 6.02449 8.53218C5.90013 8.58369 5.78714 8.65919 5.69196 8.75437C5.59678 8.84955 5.52127 8.96255 5.46976 9.08691C5.41825 9.21127 5.39174 9.34456 5.39174 9.47916C5.39174 9.61377 5.41825 9.74706 5.46976 9.87142C5.52127 9.99578 5.59678 10.1088 5.69196 10.204L9.77529 14.2873Z"
@@ -494,7 +532,7 @@ export default function NftTable() {
                                         <Button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleClickClipboard(e);
+                                                handleClickClipboard(e, row.file);
                                             }}
                                         >
                                             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -510,27 +548,29 @@ export default function NftTable() {
                                             anchorEl={anchorElClipboard}
                                             keepMounted
                                             open={Boolean(anchorElClipboard)}
-                                            onClose={handleCloseClipboard}
+                                            onClose={(e) => {
+                                                handleCloseClipboard();
+                                                navigator.clipboard.writeText(row.file);
+                                            }}
                                             sx={{
-                                                '& .MuiMenu-paper': {
-                                                    width: 'auto',
-                                                    height: 'auto',
+                                                "& .MuiMenu-paper": {
+                                                    width: "auto",
+                                                    height: "auto",
                                                     padding: 2,
                                                     paddingX: 5,
-                                                    borderRadius: '8px',
-                                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.05)',
-                                                    backgroundColor: '#fff',
-                                                    border: '1px solid #E5E5E5',
-                                                    boxSizing: 'border-box',
+                                                    borderRadius: "8px",
+                                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.05)",
+                                                    backgroundColor: "#fff",
+                                                    border: "1px solid #E5E5E5",
+                                                    boxSizing: "border-box",
                                                     fontFamily: "Lato",
                                                     fontStyle: "normal",
                                                     fontWeight: "700",
                                                     fontSize: "18px",
-                                                    '& .MuiList-padding': {
-                                                        padding: '0',
+                                                    "& .MuiList-padding": {
+                                                        padding: "0",
                                                     },
                                                 },
-
                                             }}
                                         >
                                             Link copied to clipboard.

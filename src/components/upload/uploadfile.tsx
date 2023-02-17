@@ -3,6 +3,8 @@ import { Box } from "@mui/system";
 import { set } from "immer/dist/internal";
 import React from "react";
 import ImageUploading, { ImageListType } from "react-images-uploading";
+import { useUploadAssetsMutation } from "../../helpers/api";
+import { useAppSelector } from "../../store/hooks";
 import FileUploadModal from "./modal";
 
 interface UploadImageInterface {
@@ -11,6 +13,7 @@ interface UploadImageInterface {
 }
 
 const UploadPostImage: React.FC = () => {
+    const { address, chain } = useAppSelector((state) => state.walletConnect);
     const [open, setOpen] = React.useState<boolean>(false);
     const [imageList, setImageList] = React.useState<ImageListType | []>([]);
 
@@ -23,6 +26,28 @@ const UploadPostImage: React.FC = () => {
     const onChange = (imageList: ImageListType, addUpdateIndex: number[] | undefined) => {
         setImageList(imageList);
         setOpen(true);
+    };
+
+    const [uploadAssets] = useUploadAssetsMutation();
+
+    const handleUpload = async () => {
+        const file_name = imageList[0]?.["file"]?.["name"];
+        const dotPosition = file_name?.lastIndexOf(".");
+        let extension = file_name?.substring(dotPosition ? dotPosition : 0, file_name.length);
+        const alternative_file_name = file_name?.substring(0, dotPosition ? dotPosition : 0);
+        if (!extension) {
+            extension = "";
+        }
+        uploadAssets(
+            JSON.stringify({
+                active_user: address,
+                file: imageList[0],
+                chain: chain,
+                file_extension: extension,
+                original_file_name: alternative_file_name,
+                file_name: `${alternative_file_name}.${extension}`,
+            })
+        );
     };
 
     return (
@@ -123,7 +148,7 @@ const UploadPostImage: React.FC = () => {
                 )}
             </ImageUploading>
 
-            <FileUploadModal open={open} setOpen={setOpen} image={imageList[0] || null} setImage={setImageList} />
+            <FileUploadModal open={open} setOpen={setOpen} image={imageList[0] || null} setImage={setImageList} handleUpload={handleUpload} />
         </div>
     );
 };

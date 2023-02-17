@@ -21,17 +21,15 @@ interface FileUploadModalProps {
     setOpen: Function;
     image: object | any;
     setImage: Function;
+    handleUpload: Function;
 }
 
-export default function FileUploadModal({ open, setOpen, image, setImage }: FileUploadModalProps) {
+export default function FileUploadModal({ open, setOpen, image, setImage, handleUpload }: FileUploadModalProps) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setImage([]);
     };
-
-
-
 
     const [rename, setRename] = React.useState<string>("");
     const [renameEnable, setRenameEnable] = React.useState<boolean>(false);
@@ -133,7 +131,6 @@ export default function FileUploadModal({ open, setOpen, image, setImage }: File
                                             letterSpacing: "0.01em",
                                             borderRadius: "100px",
                                             paddingLeft: "10px",
-                                            
                                         }}
                                         placeholder="Rename file"
                                     />
@@ -270,6 +267,10 @@ export default function FileUploadModal({ open, setOpen, image, setImage }: File
                                             cursor: "pointer",
                                             padding: "6px 32px",
                                             borderRadius: "100px",
+                                        }}
+                                        onClick={() => {
+                                            handleUpload();
+                                            handleClose();
                                         }}
                                     >
                                         Upload
