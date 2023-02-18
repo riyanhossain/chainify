@@ -11,7 +11,7 @@ import GetImageByType from "../../utils/GetImageByType";
 import { getSizeByBytes } from "../../utils/GetSizeByBytes";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks";
-import { useGetAssetsFromBackendMutation, useGetAssetsQuery } from "../../helpers/api";
+import { useDeleteAssetMutation, useGetAssetsQuery } from "../../helpers/api";
 import fileDownload from "js-file-download";
 
 function createData(type: string, name: string, size: number, date: string, protein: number, id: number, file: string) {
@@ -99,6 +99,12 @@ export default function NftTable() {
     const rows = data?.map((file: any) => {
         return createData(file.mimetype, file.file_name, file.size_bytes, file.created, 1, file.assetID, file.file);
     });
+
+    const [deleteAsset] = useDeleteAssetMutation();
+
+    const handleDelete = (id: number) => {
+        console.log(id);
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -376,6 +382,8 @@ export default function NftTable() {
                                                 />
                                             </svg>
                                         </Button>
+
+                                        {/* menu */}
                                         <Menu
                                             id="basic-menu"
                                             anchorEl={anchorEl}
@@ -497,6 +505,9 @@ export default function NftTable() {
                                                     fontWeight: "300",
                                                     color: "#242323",
                                                     textTransform: "capitalize",
+                                                }}
+                                                onClick={() => {
+                                                    deleteAsset(row.id);
                                                 }}
                                             >
                                                 <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">

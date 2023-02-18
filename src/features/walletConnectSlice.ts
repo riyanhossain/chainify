@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChainType, getAssetsFromBackend } from "../helpers/api";
+import { ChainType } from "../helpers/api";
 import { IAssetData } from "../helpers/types";
 import { RootState } from "../store";
 
@@ -36,13 +36,13 @@ const initialState = {
     fetching: false,
 } as WalletConnectState;
 
-export const getAccountAssets = createAsyncThunk(
-    "walletConnect/getAccountAssets",
-    async ({ chain, address }: { chain: ChainType; address: string }) => {
-        const assets = await getAssetsFromBackend(chain, address);
-        return assets;
-    }
-);
+// export const getAccountAssets = createAsyncThunk(
+//     "walletConnect/getAccountAssets",
+//     async ({ chain, address }: { chain: ChainType; address: string }) => {
+//         const assets = await getAssetsFromBackend(chain, address);
+//         return assets;
+//     }
+// );
 
 export const walletConnectSlice = createSlice({
     name: "walletConnect",
@@ -62,14 +62,14 @@ export const walletConnectSlice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(getAccountAssets.fulfilled, (state, action: any) => {
-            state.fetching = false;
-            state.assets = action.payload["assets"];
-            state.files = action.payload["files"];
-        });
-        builder.addCase(getAccountAssets.pending, (state) => {
-            state.fetching = true;
-        });
+        // builder.addCase(getAccountAssets.fulfilled, (state, action: any) => {
+        //     state.fetching = false;
+        //     state.assets = action.payload["assets"];
+        //     state.files = action.payload["files"];
+        // });
+        // builder.addCase(getAccountAssets.pending, (state) => {
+        //     state.fetching = true;
+        // });
     },
 });
 

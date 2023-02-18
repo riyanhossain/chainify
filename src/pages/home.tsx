@@ -34,7 +34,7 @@ export default function Home() {
     }, [connector, dispatch]);
 
     return (
-        <section className={styles.section}>
+        <section className={`${styles.section}`}>
             <Navbar />
 
             <Box

@@ -7,36 +7,24 @@ export enum ChainType {
     TestNet = "testnet",
 }
 
-const mainNetClient = new algosdk.Algodv2("", "https://mainnet-api.algonode.cloud", "");
-const testNetClient = new algosdk.Algodv2("", "https://testnet-api.algonode.cloud", "");
+// const mainNetClient = new algosdk.Algodv2("", "https://mainnet-api.algonode.cloud", "");
+// const testNetClient = new algosdk.Algodv2("", "https://testnet-api.algonode.cloud", "");
 
-function clientForChain(chain: ChainType): algosdk.Algodv2 {
-    switch (chain) {
-        case ChainType.MainNet:
-            return mainNetClient;
-        case ChainType.TestNet:
-            return testNetClient;
-        default:
-            throw new Error(`Unknown chain type: ${chain}`);
-    }
-}
+// function clientForChain(chain: ChainType): algosdk.Algodv2 {
+//     switch (chain) {
+//         case ChainType.MainNet:
+//             return mainNetClient;
+//         case ChainType.TestNet:
+//             return testNetClient;
+//         default:
+//             throw new Error(`Unknown chain type: ${chain}`);
+//     }
+// }
 
 export const Api = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAssetsFromBackend: builder.mutation({
-            query: (address) => ({
-                url: "holdings/get-holdings/",
-                method: "POST",
-                body: {
-                    chain: ChainType.TestNet,
-                    active_user: address,
-                },
-            }),
-            invalidatesTags: (result, error, arg) => [{ type: "Assets", id: arg }],
-        }),
-
         getAssets: builder.query({
-            query: (address) => ({
+            query: () => ({
                 url: "data.json",
                 method: "GET",
                 headers: {
@@ -75,23 +63,23 @@ export const Api = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetAssetsFromBackendMutation, useGetAssetsQuery, useUploadAssetsMutation, useGetSingleAssetQuery, useDeleteAssetMutation } = Api;
+export const { useGetAssetsQuery, useUploadAssetsMutation, useGetSingleAssetQuery, useDeleteAssetMutation } = Api;
 
-export async function getAssetsFromBackend(chain: ChainType, address: string): Promise<IAssetData[]> {
-    const response = await fetch(`${process.env.REACT_APP_BASE_API_URL}/holdings/get-holdings/`, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            chain: chain,
-            active_user: address,
-        }),
-    });
-    const assets = await response.json();
-    return assets;
-}
+// export async function getAssetsFromBackend(chain: ChainType, address: string): Promise<IAssetData[]> {
+//     const response = await fetch(`${process.env.REACT_APP_BASE_API_URL}/holdings/get-holdings/`, {
+//         method: "POST",
+//         headers: {
+//             Accept: "application/json",
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//             chain: chain,
+//             active_user: address,
+//         }),
+//     });
+//     const assets = await response.json();
+//     return assets;
+// }
 
 // export async function apiGetTxnParams(
 //   chain: ChainType

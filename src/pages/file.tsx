@@ -5,6 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import FileNavbar from "../components/navbar/filenavbar";
 import GetImageByType from "../utils/GetImageByType";
 import algo from "../assets/algo.svg";
+import { useGetSingleAssetQuery } from "../helpers/api";
+import { getFileType } from "../utils/GetFileType";
+import { getSizeByBytes } from "../utils/GetSizeByBytes";
 
 export default function File() {
     const { id } = useParams<string>();
@@ -31,6 +34,8 @@ export default function File() {
     React.useEffect(() => {
         fetchSingleFile();
     }, [fetchSingleFile]);
+
+    // const { data } = useGetSingleAssetQuery(id);
 
     const navigate = useNavigate();
 
@@ -370,7 +375,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            0000
+                                            {data?.owner?.slice(0, 5) + " ... " + data?.owner?.slice(data?.owner.length - 5, data?.owner?.length)}
                                         </p>
                                     </Box>
 
@@ -409,7 +414,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            0000
+                                            {data.assetID}
                                         </p>
                                     </Box>
 
@@ -494,7 +499,7 @@ export default function File() {
                                                     color: "#B5B3BC",
                                                 }}
                                             >
-                                                0.01
+                                                {data?.cost_algo}
                                             </p>
                                             <img
                                                 src={algo}
@@ -650,7 +655,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            Image JPG
+                                            Image {getFileType(data?.mimetype)}
                                         </p>
                                     </Box>
 
@@ -689,7 +694,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            2,8 MB
+                                            {getSizeByBytes(data.size_bytes)}
                                         </p>
                                     </Box>
 
@@ -758,7 +763,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            10.12.2022 - 19:03
+                                            {data.created}
                                         </p>
                                     </Box>
 
@@ -797,7 +802,7 @@ export default function File() {
                                                 color: "#B5B3BC",
                                             }}
                                         >
-                                            06.12.2022 - 16:32
+                                            {data.created}
                                         </p>
                                     </Box>
                                 </Box>
