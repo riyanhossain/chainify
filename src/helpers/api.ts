@@ -45,7 +45,7 @@ export const Api = apiSlice.injectEndpoints({
         }),
         getSingleAsset: builder.query({
             query: (assetId) => ({
-                url: "holdings/single-holdings/",
+                url: `holdings/single-holdings/${assetId}`,
                 method: "GET",
                 headers: {
                     Accept: "application/json",
