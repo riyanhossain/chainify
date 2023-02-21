@@ -11,10 +11,15 @@ export interface BaseQueryApi {
     getState: () => unknown;
 }
 
+// createApi is a function from @reduxjs/toolkit that handles async requests and caching for us automatically based on the request parameters and response data (see https://redux-toolkit.js.org/api/createApi)
+
 export const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({
+        // base url for all requests
         baseUrl: `${process.env.REACT_APP_BASE_API_URL}/`,
+
+        // add the chain and active_user headers to all requests
         prepareHeaders: (headers, { getState }) => {
             const { chain, address } = (getState() as RootState).walletConnect;
 
@@ -24,6 +29,10 @@ export const apiSlice = createApi({
             }
         },
     }),
+
+    // tagTypes is an array of strings that are used to identify the different types of requests that we make to the backend
     tagTypes: ["Assets"],
+
+    // endpoints is an object that contains the different types of requests that we make to the backend
     endpoints: (builder) => ({}),
 });

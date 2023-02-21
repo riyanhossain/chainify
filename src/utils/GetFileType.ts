@@ -1,3 +1,7 @@
+
+
+// This function is used to get the file type from the file mime type
+
 export const getFileType = (type: string) => {
     switch (type) {
         case "image/png":

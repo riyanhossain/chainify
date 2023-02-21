@@ -14,10 +14,14 @@ interface ProfileMenuProps {
     address: string;
 }
 
+
+// mui menu component for profile menu in navbar see mui docs for more info
 export default function ProfileMenu({ address }: ProfileMenuProps) {
     const connector = useContext(ConnectContext);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    // open and close menu functions
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -25,9 +29,13 @@ export default function ProfileMenu({ address }: ProfileMenuProps) {
         setAnchorEl(null);
     };
 
+    // navigate function
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
+
+    // disconnects wallet and resets redux store and navigates to login page
     const handleDisconnect = async () => {
         try {
             await connector.killSession();

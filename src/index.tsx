@@ -11,7 +11,11 @@ import { ConnectContext, connector } from "./store/connector";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
     <React.StrictMode>
+
+        {/* Router for react-router-dom */}
         <BrowserRouter>
+
+        {/* Provider for redux store see react-redux */} 
             <Provider store={store}>
                 <ConnectContext.Provider value={connector}>
                     <App />

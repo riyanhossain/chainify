@@ -26,12 +26,18 @@ interface FileUploadModalProps {
 
 export default function FileUploadModal({ open, setOpen, image, setImage, handleUpload }: FileUploadModalProps) {
     const handleOpen = () => setOpen(true);
+
+    // this function is called when the user clicks on the close button on the modal and sets the image state to an empty array
     const handleClose = () => {
         setOpen(false);
         setImage([]);
     };
 
+    // this state is used to store the new name of the file
+
     const [rename, setRename] = React.useState<string>("");
+
+    // this state is used to enable the rename input field
     const [renameEnable, setRenameEnable] = React.useState<boolean>(false);
 
     return (

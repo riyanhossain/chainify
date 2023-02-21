@@ -13,8 +13,13 @@ interface UploadImageInterface {
 }
 
 const UploadPostImage: React.FC = () => {
+    // get address and chain from redux store
     const { address, chain } = useAppSelector((state) => state.walletConnect);
+
+    // state for modal
     const [open, setOpen] = React.useState<boolean>(false);
+
+    // state for image list
     const [imageList, setImageList] = React.useState<ImageListType | []>([]);
 
     // allow user to only enter one image
@@ -24,12 +29,19 @@ const UploadPostImage: React.FC = () => {
     const imageTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const onChange = (imageList: ImageListType, addUpdateIndex: number[] | undefined) => {
+
+        // holds the image to this imageList state
         setImageList(imageList);
+
+        // open modal
         setOpen(true);
     };
 
+
+    // this is the mutation that is used to upload the image to the backend server 
     const [uploadAssets] = useUploadAssetsMutation();
 
+    // this is the function that is called when the user clicks on the upload button
     const handleUpload = async () => {
         const file_name = imageList[0]?.["file"]?.["name"];
         const dotPosition = file_name?.lastIndexOf(".");
@@ -38,6 +50,7 @@ const UploadPostImage: React.FC = () => {
         if (!extension) {
             extension = "";
         }
+        // upload the image to the backend server
         uploadAssets(
             JSON.stringify({
                 active_user: address,
@@ -52,6 +65,8 @@ const UploadPostImage: React.FC = () => {
 
     return (
         <div>
+
+            {/* iamge uploading  component see react-images-uploading npm or github docs for more info */}
             <ImageUploading
                 value={imageList}
                 onChange={onChange}

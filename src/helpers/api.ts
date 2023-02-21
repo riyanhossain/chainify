@@ -22,7 +22,11 @@ export enum ChainType {
 // }
 
 export const Api = apiSlice.injectEndpoints({
+
+    // The base URL is used as a prefix for all endpoints
     endpoints: (builder) => ({
+
+        // getAssets is an endpoint that we can use to make a request to the backend to get a list of assets
         getAssets: builder.query({
             query: () => ({
                 url: "data.json",
@@ -32,17 +36,23 @@ export const Api = apiSlice.injectEndpoints({
                     "Content-Type": "application/json",
                 },
             }),
+            // providesTags is an array of tags that we want to provide to the cache (in this case, we want to provide the "Assets" tag so that the getAssets endpoint will be refetched)
             providesTags: (result, error, arg) => [{ type: "Assets", id: arg }],
         }),
 
+
+        // uploadAssets is an endpoint that we can use to make a request to the backend to upload an asset
         uploadAssets: builder.mutation({
             query: (asset) => ({
                 url: "nft/create-asset/",
                 method: "POST",
                 body: asset,
             }),
+            // invalidatesTags is an array of tags that we want to invalidate when this request is made (in this case, we want to invalidate the "Assets" tag so that the getAssets endpoint will be refetched)
             invalidatesTags: (result, error, arg) => [{ type: "Assets", id: arg }],
         }),
+
+        // getSingleAsset is an endpoint that we can use to make a request to the backend to get a single asset
         getSingleAsset: builder.query({
             query: (assetId) => ({
                 url: `holdings/single-holdings/${assetId}`,
@@ -54,6 +64,8 @@ export const Api = apiSlice.injectEndpoints({
             }),
         }),
 
+
+        // deleteAsset is an endpoint that we can use to make a request to the backend to delete an asset
         deleteAsset: builder.mutation({
             query: (assetId) => ({
                 url: `nft/delete-asset/${assetId}`,
@@ -63,6 +75,8 @@ export const Api = apiSlice.injectEndpoints({
     }),
 });
 
+
+// export all of the endpoints so that we can use them in our components
 export const { useGetAssetsQuery, useUploadAssetsMutation, useGetSingleAssetQuery, useDeleteAssetMutation } = Api;
 
 // export async function getAssetsFromBackend(chain: ChainType, address: string): Promise<IAssetData[]> {

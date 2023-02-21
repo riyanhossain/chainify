@@ -22,9 +22,13 @@ function createData(type: string, name: string, size: number, date: string, prot
 
 export default function NftTable() {
     const [tableData, setTableData] = React.useState<string[]>([]);
+
+    // get address and chain staet from redux store
     const { chain, address } = useAppSelector((state) => state.walletConnect);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    // open and close menu functions
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -32,6 +36,8 @@ export default function NftTable() {
         setAnchorEl(null);
     };
 
+
+    // download file from server 
     const downloadFile = (file_name: string, view = false) => {
         fetch(`${process.env.REACT_APP_BASE_API_URL}/nft/download-file/${file_name}/${address}/`, {
             method: "GET",
@@ -56,11 +62,17 @@ export default function NftTable() {
             });
     };
 
+
+    // copy file link to clipboard
     const [anchorElClipboard, setAnchorElClipboard] = React.useState<null | HTMLElement>(null);
     const openClipboard = Boolean(anchorElClipboard);
+
+    // open and close menu functions
     const handleClickClipboard = (event: React.MouseEvent<HTMLButtonElement>, file: string) => {
         navigator.clipboard.writeText(file);
         setAnchorElClipboard(event.currentTarget);
+
+        // close menu after 2 seconds
         setTimeout(() => {
             handleCloseClipboard();
         }, 2000);
@@ -90,21 +102,22 @@ export default function NftTable() {
 
     // const [getAssetsFromBackend, result] = useGetAssetsFromBackendMutation();
 
+    /// get single assets from backend by address
     const { data } = useGetAssetsQuery(address);
-
-    console.log(data);
-
+    
+    // navigate func for other pages
     const navigate = useNavigate();
 
+    // create table rows from data from backend see mui docs for more info
     const rows = data?.map((file: any) => {
         return createData(file.mimetype, file.file_name, file.size_bytes, file.created, 1, file.assetID, file.file);
     });
 
+
+
+    // array holds  delete funnction for deleting assets from backend see redux-toolkit mutation docs for more info
     const [deleteAsset] = useDeleteAssetMutation();
 
-    const handleDelete = (id: number) => {
-        console.log(id);
-    };
 
     return (
         <TableContainer component={Paper}>
@@ -341,6 +354,7 @@ export default function NftTable() {
                                         opacity: "0.6",
                                     }}
                                 >
+                                    {/* get size by bytes in KB, MB, GB */}
                                     {getSizeByBytes(row.size)}
                                 </TableCell>
                                 <TableCell
@@ -507,6 +521,7 @@ export default function NftTable() {
                                                     textTransform: "capitalize",
                                                 }}
                                                 onClick={() => {
+                                                    // delete asset from db by id
                                                     deleteAsset(row.id);
                                                 }}
                                             >

@@ -10,7 +10,11 @@ interface GetImageByTypeProps {
     type: string;
 }
 
+
+// this function returns the image icon based on the file type
 export default function GetImageByType({ type }: GetImageByTypeProps) {
+
+
     const imageType = getFileType(type);
     switch (imageType) {
         case "JPG":

@@ -44,6 +44,8 @@ const initialState = {
 //     }
 // );
 
+
+// Slice is a collection of reducers and actions for a single feature of the application for holding the state of the wallet connect
 export const walletConnectSlice = createSlice({
     name: "walletConnect",
     initialState,
@@ -73,6 +75,8 @@ export const walletConnectSlice = createSlice({
     },
 });
 
+
+// Selectors are functions that take the state of the application and return a subset of it and are used to access the state of the application from other files (see https://redux-toolkit.js.org/api/createSelector)
 export const selectAssets = createSelector(
     (state: RootState) => state.walletConnect.assets,
     (assets) => assets.map((a) => ({ ...a, amount: a.amount }))

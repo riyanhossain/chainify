@@ -5,7 +5,11 @@ import algo from "../../assets/algo.svg";
 
 import ProfileMenu from "./menu";
 
+
+// navbar component for all pages
 export default function Navbar() {
+
+    // redux state for wallet address and assets
     const { address, assets } = useAppSelector((state) => state.walletConnect);
     return (
         <div className={styles.nav}>

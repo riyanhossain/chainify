@@ -10,11 +10,14 @@ import UploadPostImage from "../components/upload/uploadfile";
 import NftTable from "../components/table/table";
 
 export default function Home() {
-    const connector = useContext(ConnectContext);
 
+    // get the connector from the context
+    const connector = useContext(ConnectContext);
+    
+    // get the dispatch function from the redux store
     const dispatch = useAppDispatch();
 
-    // check  disconnect wallet
+    // this is the hook that runs when the page loads and when the connector changes
     useEffect(() => {
         connector.on("disconnect", (error, payload) => {
             console.log("disconnect", error, payload);
@@ -23,10 +26,15 @@ export default function Home() {
             if (error) {
                 throw error;
             }
+
+            // reset the redux store
             dispatch(reset());
         });
 
+        // cleanup function
         return () => {
+
+            // unsubscribe from events
             connector.off("connect");
             connector.off("session_update");
             connector.off("disconnect");
@@ -35,6 +43,8 @@ export default function Home() {
 
     return (
         <section className={`${styles.section}`}>
+
+            {/* navbar */}
             <Navbar />
 
             <Box
@@ -43,8 +53,12 @@ export default function Home() {
                     height: "calc(100vh - 105px)",
                 }}
             >
+
+                {/* main container */}
                 <Grid container spacing={2} sx={{}}>
                     <Grid xs={9.5}>
+
+                        {/* upload container */}
                         <Box
                             sx={{
                                 height: "202px",
@@ -75,8 +89,13 @@ export default function Home() {
                             >
                                 Upload
                             </p>
+
+                            {/* upload image component */}
                             <UploadPostImage />
                         </Box>
+
+
+                        {/* files container */}
 
                         <Box
                             sx={{
@@ -173,11 +192,17 @@ export default function Home() {
                                     mt: 2,
                                 }}
                             >
+
+                                {/* tables of nfts files */}
                                 <NftTable />
                             </Box>
                         </Box>
                     </Grid>
+
+                    {/* right side container for nft details */}
                     <Grid xs={2.5}>
+
+                        {/* nft details container */}
                         <Box
                             sx={{
                                 height: "calc(100vh - 105px)",

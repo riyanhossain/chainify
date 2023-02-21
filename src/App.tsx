@@ -9,10 +9,16 @@ import File from "./pages/file";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+
+    // get address and chain from redux store
     const { address, chain } = useAppSelector((state) => state.walletConnect);
     const navigate = useNavigate();
+
+    // get current pathname
     const { pathname } = useLocation();
 
+
+    // if user is not logged in, redirect to login page
     useEffect(() => {
         if (address && chain) {
             QRCodeModal.close();
@@ -23,8 +29,10 @@ function App() {
     return (
         <main className="">
             <Routes>
+                {/* login page */}
                 <Route path="/login" element={<Login />} />
 
+                {/* home page */}
                 <Route
                     path="/"
                     element={
@@ -33,6 +41,8 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
+                {/* single file page */}
                 <Route
                     path="/file/:id"
                     element={

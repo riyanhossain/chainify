@@ -10,9 +10,17 @@ import { getFileType } from "../utils/GetFileType";
 import { getSizeByBytes } from "../utils/GetSizeByBytes";
 
 export default function File() {
+    // getting the assets id from the url for retrive the corresponding assets data
     const { id } = useParams<string>();
 
+    // comment this section of code if you use the python api
+
+    // start of the section of code that you need to comment if you use the python api
+
+    // this state holds the data of the asset
     const [data, setData] = React.useState<any>({});
+
+    // this function fetches the data of the asset from the api
     const fetchSingleFile = useCallback(async () => {
         const response = await fetch(
             "../../data.json",
@@ -26,6 +34,8 @@ export default function File() {
         );
         const data = await response.json();
 
+        // filtering the data to get the data of the asset, which id is equal to the id in the url
+        // if you use
         const filteredData = data.filter((file: any) => file.assetID === Number(id));
 
         setData(filteredData[0]);
@@ -35,10 +45,20 @@ export default function File() {
         fetchSingleFile();
     }, [fetchSingleFile]);
 
+    // end of the section of code that you need to comment if you use the python api
+
+
+    // uncomment this below of code if you use the python api
+
     // const { data } = useGetSingleAssetQuery(id);
+
+
+    // this is hooks for navigation
 
     const navigate = useNavigate();
 
+
+    // this state holds the value of the hideDetails state for the details section of asset details
     const [hideDetails, setHideDetails] = React.useState<boolean>(false);
 
     return (
@@ -56,6 +76,7 @@ export default function File() {
                 }}
             >
                 <Grid container spacing={2} sx={{}}>
+                    {/* if details section is hidden then the grid will be 11.3 else 9.5 */}
                     <Grid xs={hideDetails ? 11.3 : 9.5}>
                         <Box
                             sx={{
@@ -77,6 +98,7 @@ export default function File() {
                                     gap: "2rem",
                                 }}
                             >
+                                {/* this commponent return the file icon based on the file type */}
                                 <GetImageByType type={data.mimetype} />
 
                                 <p
@@ -255,6 +277,8 @@ export default function File() {
                         </Box>
                     </Grid>
                     <Grid xs={hideDetails ? 0.7 : 2.5}>
+
+                        {/* if hideDetails is true, it will hide the details of the asset */}
                         {hideDetails ? (
                             <Box
                                 sx={{

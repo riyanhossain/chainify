@@ -1,3 +1,5 @@
+// i haven't used this function yet, but it is from previous version of the code. I am not sure if it is used in the future. I will keep it for now.
+
 export function capitalize(string: string): string {
   return string
     .split(" ")
